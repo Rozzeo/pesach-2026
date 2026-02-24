@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Search, Clock, Users, ChevronDown, ChevronUp, Award } from 'lucide-react';
-import { recipes, recipeCategories, type RecipeCategory, type Recipe } from '../data/recipes';
+import { recipes, recipeCategories, categoryLabels, type RecipeCategory, type Recipe } from '../data/recipes';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const categoryColors: Record<RecipeCategory, string> = {
@@ -13,7 +13,7 @@ const categoryColors: Record<RecipeCategory, string> = {
 
 function RecipeCard({ recipe }: { recipe: Recipe }) {
   const [expanded, setExpanded] = useState(false);
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden hover:shadow-md transition-shadow">
@@ -32,21 +32,21 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
                 </span>
               )}
             </div>
-            <h3 className="text-lg font-serif font-bold text-stone-800">{recipe.name}</h3>
+            <h3 className="text-lg font-serif font-bold text-stone-800">{recipe.name[lang]}</h3>
           </div>
         </div>
 
-        <p className="text-sm text-stone-600 leading-relaxed mb-4">{recipe.description}</p>
+        <p className="text-sm text-stone-600 leading-relaxed mb-4">{recipe.description[lang]}</p>
 
         {/* Meta */}
         <div className="flex gap-4 text-xs text-stone-500">
           <span className="flex items-center gap-1">
             <Clock size={12} />
-            {t('recipes.prep')} {recipe.prepTime}
+            {t('recipes.prep')} {recipe.prepTime[lang]}
           </span>
           <span className="flex items-center gap-1">
             <Clock size={12} />
-            {t('recipes.cook')} {recipe.cookTime}
+            {t('recipes.cook')} {recipe.cookTime[lang]}
           </span>
           <span className="flex items-center gap-1">
             <Users size={12} />
@@ -75,10 +75,10 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
                 {recipe.ingredients.map((ing, i) => (
                   <li
                     key={i}
-                    className={`text-sm leading-snug ${ing.startsWith('—') ? 'font-bold text-stone-700 pt-2 text-xs uppercase tracking-wide' : 'text-stone-700 flex items-start gap-2'}`}
+                    className={`text-sm leading-snug ${ing[lang].startsWith('—') ? 'font-bold text-stone-700 pt-2 text-xs uppercase tracking-wide' : 'text-stone-700 flex items-start gap-2'}`}
                   >
-                    {!ing.startsWith('—') && <span className="text-gold mt-1 flex-shrink-0">•</span>}
-                    {ing}
+                    {!ing[lang].startsWith('—') && <span className="text-gold mt-1 flex-shrink-0">•</span>}
+                    {ing[lang]}
                   </li>
                 ))}
               </ul>
@@ -93,7 +93,7 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
                     <span className="flex-shrink-0 w-6 h-6 bg-wine text-white rounded-full text-xs flex items-center justify-center font-bold mt-0.5">
                       {i + 1}
                     </span>
-                    <span>{step}</span>
+                    <span>{step[lang]}</span>
                   </li>
                 ))}
               </ol>
@@ -103,7 +103,7 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
           {recipe.tips && (
             <div className="mt-5 bg-gold/10 border border-gold/30 rounded-xl px-4 py-3">
               <span className="text-xs font-bold text-gold uppercase tracking-wide">{t('recipes.tipLabel')} </span>
-              <span className="text-sm text-stone-700">{recipe.tips}</span>
+              <span className="text-sm text-stone-700">{recipe.tips[lang]}</span>
             </div>
           )}
         </div>
@@ -115,12 +115,12 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
 export default function Recipes() {
   const [activeCategory, setActiveCategory] = useState<RecipeCategory | 'All'>('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   const filtered = recipes.filter(r => {
     const matchesCategory = activeCategory === 'All' || r.category === activeCategory;
-    const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = r.name[lang].toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.description[lang].toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -167,7 +167,7 @@ export default function Recipes() {
                   : 'bg-white text-stone-600 border border-stone-300 hover:border-wine hover:text-wine'
               }`}
             >
-              {cat} ({count})
+              {categoryLabels[cat][lang]} ({count})
             </button>
           );
         })}
@@ -192,7 +192,7 @@ export default function Recipes() {
             return (
               <div key={cat}>
                 {activeCategory === 'All' && (
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-stone-400 mb-3 mt-6">{cat}</h3>
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-stone-400 mb-3 mt-6">{categoryLabels[cat][lang]}</h3>
                 )}
                 <div className="space-y-4">
                   {catRecipes.map(recipe => (

@@ -1,4 +1,5 @@
 export type Lang = 'en' | 'ru';
+export type LocalizedString = { en: string; ru: string };
 
 const translations = {
   en: {

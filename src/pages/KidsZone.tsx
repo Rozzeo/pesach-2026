@@ -50,15 +50,15 @@ const phaseEmojis: Record<string, string> = {
 function ActivityCard({ activity }: { activity: Activity }) {
   const [expanded, setExpanded] = useState(false);
   const [expandedStep, setExpandedStep] = useState<string | null>(null);
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden hover:shadow-md transition-shadow">
       {/* Header */}
       <div className="p-6">
         <div className="flex flex-wrap gap-2 mb-3">
-          <span className={`text-xs font-bold px-2 py-1 rounded-full ${typeColors[activity.type] ?? 'bg-stone-500 text-white'}`}>
-            {activity.type}
+          <span className={`text-xs font-bold px-2 py-1 rounded-full ${typeColors[activity.type.en] ?? 'bg-stone-500 text-white'}`}>
+            {activity.type[lang]}
           </span>
           <span className="text-xs px-2 py-1 rounded-full bg-parchment text-stone-600 border border-sand flex items-center gap-1">
             <Users size={10} />
@@ -66,17 +66,17 @@ function ActivityCard({ activity }: { activity: Activity }) {
           </span>
           <span className="text-xs px-2 py-1 rounded-full bg-parchment text-stone-600 border border-sand flex items-center gap-1">
             <Clock size={10} />
-            {activity.duration}
+            {activity.duration[lang]}
           </span>
         </div>
 
-        <h3 className="text-xl font-serif font-bold text-stone-800 mb-1">{activity.title}</h3>
-        <p className="text-sm font-medium text-wine mb-3">{activity.subtitle}</p>
-        <p className="text-sm text-stone-600 leading-relaxed mb-4">{activity.overview}</p>
+        <h3 className="text-xl font-serif font-bold text-stone-800 mb-1">{activity.title[lang]}</h3>
+        <p className="text-sm font-medium text-wine mb-3">{activity.subtitle[lang]}</p>
+        <p className="text-sm text-stone-600 leading-relaxed mb-4">{activity.overview[lang]}</p>
 
         <div className="flex items-center gap-2 text-sm text-gold font-medium">
           <span>🏆</span>
-          <span>{t('kids.artifact')} {activity.artifact}</span>
+          <span>{t('kids.artifact')} {activity.artifact[lang]}</span>
         </div>
       </div>
 
@@ -102,7 +102,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
               {activity.materials.map((m, i) => (
                 <li key={i} className="text-sm text-stone-700 flex items-start gap-2">
                   <span className="text-gold mt-1 flex-shrink-0">•</span>
-                  {m}
+                  {m[lang]}
                 </li>
               ))}
             </ul>
@@ -116,21 +116,21 @@ function ActivityCard({ activity }: { activity: Activity }) {
             </h4>
             <div className="space-y-3">
               {activity.steps.map((step, i) => {
-                const emoji = phaseEmojis[step.phase] ?? '▶';
-                const isOpen = expandedStep === step.phase;
+                const emoji = phaseEmojis[step.phase.en] ?? '▶';
+                const isOpen = expandedStep === step.phase.en;
                 return (
                   <div key={i} className="border border-stone-200 rounded-xl overflow-hidden">
                     <button
-                      onClick={() => setExpandedStep(isOpen ? null : step.phase)}
+                      onClick={() => setExpandedStep(isOpen ? null : step.phase.en)}
                       className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-stone-50 transition-colors"
                     >
                       <span className="text-lg flex-shrink-0">{emoji}</span>
-                      <span className="font-semibold text-stone-800 text-sm flex-1">{step.phase}</span>
+                      <span className="font-semibold text-stone-800 text-sm flex-1">{step.phase[lang]}</span>
                       {isOpen ? <ChevronUp size={14} className="text-stone-400" /> : <ChevronDown size={14} className="text-stone-400" />}
                     </button>
                     {isOpen && (
                       <div className="px-4 pb-4 pt-1 bg-stone-50 border-t border-stone-100">
-                        <p className="text-sm text-stone-700 leading-relaxed whitespace-pre-line">{step.content}</p>
+                        <p className="text-sm text-stone-700 leading-relaxed whitespace-pre-line">{step.content[lang]}</p>
                       </div>
                     )}
                   </div>
@@ -146,7 +146,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
                 <Lightbulb size={14} className="text-gold" />
                 <span className="text-xs font-bold text-gold uppercase tracking-wide">{t('kids.parentTips')}</span>
               </div>
-              <p className="text-sm text-stone-700 leading-relaxed">{activity.parentTips}</p>
+              <p className="text-sm text-stone-700 leading-relaxed">{activity.parentTips[lang]}</p>
             </div>
 
             {activity.scienceNote && (
@@ -155,7 +155,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
                   <FlaskConical size={14} className="text-herb-green" />
                   <span className="text-xs font-bold text-herb-green uppercase tracking-wide">{t('kids.science')}</span>
                 </div>
-                <p className="text-sm text-stone-700 leading-relaxed">{activity.scienceNote}</p>
+                <p className="text-sm text-stone-700 leading-relaxed">{activity.scienceNote?.[lang]}</p>
               </div>
             )}
           </div>

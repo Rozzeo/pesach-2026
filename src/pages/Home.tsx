@@ -6,7 +6,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const allTasks = getAllTasks();
   const [checkedIds] = useLocalStorage<string[]>('pesach-checklist', []);
   const completedCount = allTasks.filter(t => checkedIds.includes(t.id)).length;
@@ -93,8 +93,8 @@ export default function Home() {
       {currentPhase && (
         <section className="bg-white border-l-4 border-wine rounded-xl p-5 mb-8 shadow-sm">
           <div className="text-xs font-bold uppercase tracking-widest text-wine mb-1">{t('home.phaseNow')}</div>
-          <h3 className="text-xl font-serif font-bold text-stone-800 mb-1">{currentPhase.title}</h3>
-          <p className="text-stone-600 text-sm mb-3">{currentPhase.when} — {currentPhase.description}</p>
+          <h3 className="text-xl font-serif font-bold text-stone-800 mb-1">{currentPhase.title[lang]}</h3>
+          <p className="text-stone-600 text-sm mb-3">{currentPhase.when[lang]} — {currentPhase.description[lang]}</p>
           <Link
             to="/preparation"
             className="inline-flex items-center gap-2 text-sm font-semibold text-wine hover:text-wine-dark transition-colors"

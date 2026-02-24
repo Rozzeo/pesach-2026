@@ -5,7 +5,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Preparation() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const allTasks = getAllTasks();
   const [checkedIds, setCheckedIds] = useLocalStorage<string[]>('pesach-checklist', []);
   const [expandedPhases, setExpandedPhases] = useState<number[]>([getPhaseByDate()]);
@@ -92,9 +92,9 @@ export default function Preparation() {
                       {t('prep.phaseLabel')} {phase.id}
                     </span>
                   </div>
-                  <div className="font-serif font-bold text-lg">{phase.title}</div>
+                  <div className="font-serif font-bold text-lg">{phase.title[lang]}</div>
                   <div className={`text-sm ${isCurrent ? 'text-white/80' : 'text-stone-500'}`}>
-                    {phase.when} — {phaseCompleted}/{phaseTasks.length} {t('prep.done')}
+                    {phase.when[lang]} — {phaseCompleted}/{phaseTasks.length} {t('prep.done')}
                   </div>
                 </span>
 
@@ -138,7 +138,7 @@ export default function Preparation() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between gap-2">
                               <span className={`font-medium text-sm leading-snug ${isChecked ? 'line-through text-stone-400' : 'text-stone-800'}`}>
-                                {task.title}
+                                {task.title[lang]}
                               </span>
                               <button
                                 onClick={() => toggleTask(task.id)}
@@ -150,7 +150,7 @@ export default function Preparation() {
                             </div>
                             {isTaskExpanded && (
                               <p className="text-xs text-stone-600 mt-2 leading-relaxed bg-parchment rounded-lg px-3 py-2">
-                                {task.explanation}
+                                {task.explanation[lang]}
                               </p>
                             )}
                           </div>
